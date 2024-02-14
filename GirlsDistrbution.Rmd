@@ -1,0 +1,101 @@
+---
+title: "Females Trainers"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+ 
+
+```
+### Libraries
+
+```{r libraries, include=FALSE,echo=FALSE}
+library(fitdistrplus)
+library(magrittr)
+```
+
+
+```{r,include=FALSE}
+dataset<-read.csv(file.choose(),header = T)
+x<-dataset$הפרשי.הגעה.של.מתעמלות
+x<-x[1:49]
+print(x)
+```
+
+
+```{r ,echo=FALSE}
+
+par(mfrow=c(1,3)) # defines 2 plots on the same window
+plot(x,ylab=" values") # plot ( left graph )
+hist(x, ylab="Frequency ") # histogram (right graph)
+boxplot(x)
+```
+
+
+```{r,echo=FALSE}
+normFit<-fitdist(x,"norm") # fitting a normal distrbution 
+summary(normFit) # summary function displays the results 
+
+
+```
+
+
+```{r,echo=FALSE}
+normFit$estimate[1]  # is the first paramter- mean
+normFit$estimate[2]  # is the second paramter- sd
+```
+
+
+
+```{r,echo=FALSE}
+plotdist(x,"norm",para=list(mean=normFit$estimate[1],sd=normFit$estimate[2])) 
+
+```
+
+
+```{r,echo=FALSE}
+expFit<-fitdist(x,"exp") # fitting exponential distribution will not work
+summary(expFit) # summary function displays the results 
+
+```
+
+
+```{r,echo=FALSE}
+expFit$estimate[1]  # is the first paramter- mean
+```
+
+
+```{r,echo=FALSE}
+plotdist(x,"exp",para=list(rate = expFit$estimate[1])) 
+
+```
+
+
+
+** The graphs can be combined into one graph in the following manner: ** 
+
+```{r,echo=FALSE}
+par(mfrow=c(2,2)) # manually define a 2X2 graph window 
+legendText<-c("exp","norm") # define legend text
+denscomp(list(expFit,normFit),legendtext=legendText) # histograms
+qqcomp(list(expFit,normFit),legendtext=legendText)  # qq plot
+cdfcomp(list(expFit,normFit),legendtext=legendText) # cdf plot
+ppcomp(list(expFit,normFit),legendtext=legendText) # pp plot
+```
+
+```{r}
+normgof<- gofstat(normFit)%>%print()
+normgof$kstest%>%print()
+```
+For norm Fit - H0 is  denied.
+
+```{r}
+expgof<- gofstat(expFit)%>%print() 
+expgof$kstest%>%print()
+```
+For exp Fit - H0 is not denied. 
+
