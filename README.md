@@ -2,6 +2,6 @@ For this project, we were tasked with examining the training schedule of Olympic
 
 The repository has three kinds of files:
 
-Excel Data
-R files with the code
-PDF project report
+1. Excel Data
+2. R files with the code
+3. PDF project report
